@@ -1,0 +1,17 @@
+{
+  "name": "ai-username-generator",
+  "version": "1.0.0",
+  "description": "A high-performance AI-branded username engine",
+  "main": "api/index.js",
+  "dependencies": {
+    "express": "^4.18.2",
+    "unique-names-generator": "^4.7.1"
+  },
+  "scripts": {
+    "start": "node api/index.js",
+    "dev": "vercel dev"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
