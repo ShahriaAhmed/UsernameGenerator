@@ -1,6 +1,4 @@
-const express = require('express');
-const { uniqueNamesGenerator, adjectives, animals, colors, names } = require('unique-names-generator');
-const app = express();
+const { uniqueNamesGenerator, adjectives, animals, colors } = require('unique-names-generator');
 
 const renderPage = (generatedLists, query = '') => `
 <!DOCTYPE html>
@@ -20,7 +18,6 @@ const renderPage = (generatedLists, query = '') => `
             </div>
             <h1 class="text-4xl font-extrabold tracking-tight">AI Username <span class="text-indigo-500">Generator</span></h1>
         </header>
-
         <form action="/" method="GET" class="mb-12">
             <div class="flex flex-col md:flex-row gap-2 p-2 bg-slate-800 rounded-2xl border border-slate-700">
                 <input type="text" name="topic" placeholder="Enter a seed keyword..." value="${query}" 
@@ -30,15 +27,14 @@ const renderPage = (generatedLists, query = '') => `
                 </button>
             </div>
         </form>
-
         <div class="grid md:grid-cols-2 gap-8">
-            ${Object.entries(generatedLists).map(([style, items]) => `
+${Object.entries(generatedLists).map(([style, items]) => `
                 <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
                     <h2 class="text-indigo-400 font-bold uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
                         Style: ${style}
                     </h2>
                     <div class="space-y-3">
-                        ${items.map(item => `
+${items.map(item => `
                             <div class="flex justify-between items-center p-3 bg-slate-900/50 rounded-lg border border-slate-700/50 group">
                                 <span class="font-mono text-slate-200">${item}</span>
                                 <button onclick="navigator.clipboard.writeText('${item}'); alert('Copied!')" 
@@ -54,8 +50,9 @@ const renderPage = (generatedLists, query = '') => `
 </html>
 `;
 
-app.get('/', (req, res) => {
+module.exports = (req, res) => {
     const topic = req.query.topic || 'User';
+    
     const results = {
         "Predictive": Array.from({ length: 4 }, () => uniqueNamesGenerator({
             dictionaries: [adjectives, [topic], animals],
@@ -68,7 +65,6 @@ app.get('/', (req, res) => {
             style: 'lowerCase'
         }))
     };
-    res.send(renderPage(results, topic));
-});
-
-module.exports = app;
+    
+    res.status(200).send(renderPage(results, topic));
+};
